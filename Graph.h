@@ -3,6 +3,8 @@
 
 #include "Vertex.h"
 
+const int NOT_COLORED = -1;
+
 enum sides
 {
     LEFT = 'l',

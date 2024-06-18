@@ -6,20 +6,20 @@
 
 class Vertex
 {
-	private:
+    private:
 
-		int neighbor_count;
-		int* neighbors;
+        int neighbor_count;
+        int* neighbors;
 
-	public:
+    public:
 
-		Vertex(int neighbor_count);
+        Vertex(int neighbor_count);
 
-		~Vertex();
+        ~Vertex();
 
-		int size() const;
+        int size() const;
 
-		int get_neighbor(int index) const;
+        int get_neighbor(int index) const;
 };
 
 #endif

@@ -32,7 +32,7 @@ void handle_input(unsigned int* graph_count, Graph*** graphs)
     if (not_scanned_args != 1)
         exit(EXIT_FAILURE);
 
-    *graphs = (Graph**)(malloc(*graph_count * sizeof(Graph*)));
+    *graphs = new Graph* [*graph_count];
     if (*graphs == nullptr)
     {
         perror("Error - error allocating memory for graphs");
@@ -57,7 +57,7 @@ void delete_graphs(unsigned int graph_count, Graph*** graphs)
         delete (*graphs)[i];
     }
 
-    free(*graphs);
+    delete[] * graphs;
     *graphs = nullptr;
 }
 

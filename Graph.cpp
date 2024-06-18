@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "Graph.h"
 #include "VertexInfo.h"
@@ -6,7 +6,7 @@
 
 Graph::Graph(long long order) : order(order), complete_graph_edges((order* (order - 1)) / 2), edge_count(0), max_deg(0)
 {
-    this->vertices = (Vertex**)(malloc((size_t)order * sizeof(Vertex*)));
+    this->vertices = new Vertex* [(unsigned int)order];
     if (this->vertices == nullptr)
     {
         perror("Error - allocating memory for vertices");
@@ -35,7 +35,7 @@ Graph::~Graph()
     for (long long i = 0; i < this->order; i++)
         delete this->vertices[i];
 
-    free(this->vertices);
+    delete[] this->vertices;
 }
 
 
@@ -130,7 +130,7 @@ void Graph::bipartiness() const
 
     for (int i = 0; i < this->order; i++)
     {
-        if (!visited[i])//wywalone && sides[i] == ' '
+        if (!visited[i])
         {
             DFS_sides(this, i + 1, visited, sides, RIGHT, &bipartiness);
         }
@@ -148,11 +148,11 @@ void Graph::greedy_coloring() const
     int* colors = (int*)(malloc((size_t)this->order * sizeof(int)));
     if (colors == nullptr)
     {
-        perror("Error - allocating memory for sides - DFS");
+        perror("Error - allocating memory for colors");
         exit(EXIT_FAILURE);
     }
 
-    int* used = (int*)(malloc((size_t)(this->max_deg + 1) * sizeof(int)));//bo maksymalna liczba kolor�w to maks stopie� + 1
+    int* used = (int*)(malloc((size_t)(this->max_deg + 1) * sizeof(int)));
     if (used == nullptr)
     {
         perror("Error - allocating memory for used colors - DFS");
@@ -160,7 +160,7 @@ void Graph::greedy_coloring() const
     }
 
     for (int i = 0; i < this->order; i++)
-        colors[i] = -1;
+        colors[i] = NOT_COLORED;
 
     colors[0] = 1;
 
@@ -184,27 +184,27 @@ void Graph::greedy_coloring_LF() const
     int* colors = (int*)(malloc((size_t)this->order * sizeof(int)));
     if (colors == nullptr)
     {
-        perror("Error - allocating memory for sides - DFS");
+        perror("Error - allocating memory for colors");
         exit(EXIT_FAILURE);
     }
 
-    int* used = (int*)(malloc((size_t)(this->max_deg + 1) * sizeof(int)));//bo maksymalna liczba kolor�w to maks stopie� + 1
+    int* used = (int*)(malloc((size_t)(this->max_deg + 1) * sizeof(int)));//bo maksymalna liczba kolorïż½w to maks stopieïż½ + 1
     if (used == nullptr)
     {
-        perror("Error - allocating memory for used colors - DFS");
+        perror("Error - allocating memory for used colors");
         exit(EXIT_FAILURE);
     }
 
-    vertex_info_t* vertices_t = (vertex_info_t*)malloc((size_t)this->order * sizeof(vertex_info_t));//struktura trzymaj�ca inta i wska�nik na inta - nr vertexa jaki ma
+    vertex_info_t* vertices_t = (vertex_info_t*)malloc((size_t)this->order * sizeof(vertex_info_t));//struktura trzymajïż½ca inta i wskaïż½nik na inta - nr vertexa jaki ma
     if (vertices_t == nullptr)
     {
         perror("Error - allocating memory for vertices");
         exit(EXIT_FAILURE);
     }
-    
+
     for (int i = 0; i < this->order; i++)
     {
-        colors[i] = -1;
+        colors[i] = NOT_COLORED;
         vertices_t[i].index = i + 1;
         vertices_t[i].degree = (*this)[i]->size();
     }
@@ -214,7 +214,7 @@ void Graph::greedy_coloring_LF() const
     for (int i = 0; i < this->order; i++) // long long i?
     {
         reset_arr(used, int(this->max_deg + 1));
-        color_vertex_greedy(this, vertices_t[this->order - 1 - i].index, used, colors, int(this->max_deg + 1));
+        color_vertex_greedy(this, vertices_t[i].index, used, colors, int(this->max_deg + 1));
     }
 
     for (int i = 0; i < this->order; i++)
